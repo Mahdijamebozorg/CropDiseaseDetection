@@ -2,15 +2,32 @@ from PIL import Image
 import io
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import os
+import urllib
 
 from fastapi import FastAPI
 from fastapi import File, UploadFile
 
 model_dir = "./model/efficientnetb3-PlantVillageDisease.h5"
 weights_dir = './model/efficientnetb3-PlantVillageDisease-weights.h5'
+model_url = 'https://github.com/Mahdijamebozorg/CropDiseaseDetection/raw/main/model/efficientnetb3-PlantVillageDisease.h5'
+weights_url = 'https://github.com/Mahdijamebozorg/CropDiseaseDetection/raw/main/model/efficientnetb3-PlantVillageDisease-weights.h5'
 
-model = load_model(model_dir)
-model.load_weights(weights_dir)
+model = ...
+
+try:
+    model = load_model(model_dir)
+except:
+    urllib.request.urlretrieve(model_url, model_dir)
+    model = load_model(model_dir)
+
+try:
+    model.load_weights(weights_dir)
+except:
+    urllib.request.urlretrieve(weights_url, weights_dir)
+    model.load_weights(weights_dir)
+
+
 # added manually to avoid adding pandas
 model_classes = [
     "Apple___Apple_scab", 
@@ -74,10 +91,8 @@ async def predict(file: UploadFile = File(...)):
         img = tf.keras.utils.img_to_array(img)
         if img is None:
             return {"message": "Image file is not valid"}
-        print(f'image {img}')
 
         predictions = model.predict(tf.convert_to_tensor(tf.expand_dims(img,axis=0)))
-        print(f'predicted {predictions}')
         prediction_class = model_classes[tf.argmax(predictions,axis=1).numpy()[0]]
         return {"prediction_class": prediction_class}
     except Exception as e:
