@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 from fastapi import FastAPI
 from fastapi import File, UploadFile
 
-model_dir = "./model/efficientnetb3-PlantVillageDisease-99.65.h5"
+model_dir = "./model/efficientnetb3-PlantVillageDisease.h5"
 weights_dir = './model/efficientnetb3-PlantVillageDisease-weights.h5'
 
 model = load_model(model_dir)
