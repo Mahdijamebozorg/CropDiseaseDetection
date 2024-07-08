@@ -1,0 +1,10 @@
+.git/
+.idea/
+
+__pycache__/
+venv/
+
+plantvillage-dataset/
+*.zip
+*.rar
+*.ipynb
