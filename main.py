@@ -19,13 +19,20 @@ try:
     model = load_model(model_dir)
 except:
     urllib.request.urlretrieve(model_url, model_dir)
-    model = load_model(model_dir)
+    try:
+        model = load_model(model_dir)
+    except:
+        raise RuntimeError("Can't load model")
+
 
 try:
     model.load_weights(weights_dir)
 except:
     urllib.request.urlretrieve(weights_url, weights_dir)
-    model.load_weights(weights_dir)
+    try:
+        model.load_weights(weights_dir)
+    except:
+        raise RuntimeError("Can't load weights")
 
 
 # added manually to avoid adding pandas
